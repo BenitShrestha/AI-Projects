@@ -22,6 +22,9 @@ face_match = False
 # Load reference image
 reference_img = cv2.imread('Live_Face_Recognition/Images/reference_img_one.jpg')
 
+def check_face(frame):
+    pass
+
 while True:
     """ 
     Return value - Determine if something was returned 
@@ -30,7 +33,21 @@ while True:
     ret, frame = cap.read()
 
     if ret:
-        pass
+        if counter % 30 == 0: # Run every 30 frames
+            try: # Starting a thread
+                threading.Thread(target = check_face, args = (frame.copy(),)).start() # Comma put because args needs to be a tuple 
+            except ValueError:
+                pass
+        counter += 1 # Increment counter
+
+        if face_match:
+            """ If face is matched, display text on frame, font scale, color: BGR, thickness """
+            cv2.putText(frame, "Benit!", (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (0, 255, 0), 2)
+        else:
+            cv2.putText(frame, 'Not Benit!', (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0 , 255), 2)
+
+        cv2.imshow('Live Face Recognition', frame)
+
     key = cv2.waitKey(1) # To recognize user key press input 
     if key == ord("q"): 
         break # Break out of loop if 'q' is pressed
