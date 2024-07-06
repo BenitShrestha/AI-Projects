@@ -1,6 +1,8 @@
 """
 A live face recognition system that uses OpenCV and Deepface
 """
+import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 import threading 
 import cv2 
 from deepface import DeepFace
@@ -12,7 +14,7 @@ cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 # Set width and height of camera frame
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-cap.set(cv2, CAP_PROP_FRAME_HEIGHT, 480)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
 """ Model checks camera frame based on counter, in fps """
 counter = 0 
@@ -20,10 +22,17 @@ counter = 0
 face_match = False
 
 # Load reference image
-reference_img = cv2.imread('Live_Face_Recognition/Images/reference_img_one.jpg')
+reference_img = cv2.imread('Live_Face_Recognition/Images/reference_img_six.png')
 
-def check_face(frame):
-    pass
+def check_face(frame): # Machine learning function to check if user is Benit
+    global face_match
+    try: # Verify using DeepFace, copy() to avoid locking scenarios
+        if DeepFace.verify(frame, reference_img.copy())['verified']:
+            face_match = True
+        else:
+            face_match = False
+    except ValueError:
+        face_match = False
 
 while True:
     """ 
