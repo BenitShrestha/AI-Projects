@@ -62,3 +62,5 @@ while True:
         break # Break out of loop if 'q' is pressed
 
 cv2.destroyAllWindows() # Destroy window after loop terminates
+
+
