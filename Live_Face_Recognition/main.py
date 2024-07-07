@@ -24,7 +24,7 @@ flag = 0
 
 # Load reference image
 reference_img = cv2.imread('Live_Face_Recognition/Images/reference_img_six.png')
-second_reference_img = cv2.imread('Live_Face_Recognition/Images/reference_img_one.jpg')
+second_reference_img = cv2.imread('Live_Face_Recognition/Images/reference_img_basanta.jpg')
 
 def check_face(frame): # Machine learning function to check if user is Benit
     global face_match
@@ -60,9 +60,9 @@ while True:
             """ If face is matched, display text on frame, font scale, color: BGR, thickness """
             cv2.putText(frame, "Benit no glasses!", (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (0, 255, 0), 2)
         elif face_match and flag == 2:
-            cv2.putText(frame, "Benit with glasses!", (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (0, 255, 0), 2)
+            cv2.putText(frame, "Basanta!", (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (0, 255, 0), 2)
         else:
-            cv2.putText(frame, 'Not Benit!', (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0 , 255), 2)
+            cv2.putText(frame, 'Not Recognized!', (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0 , 255), 2)
 
         cv2.imshow('Live Face Recognition', frame)
 
