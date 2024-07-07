@@ -20,15 +20,22 @@ cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 counter = 0 
 
 face_match = False
+flag = 0 
 
 # Load reference image
 reference_img = cv2.imread('Live_Face_Recognition/Images/reference_img_six.png')
+second_reference_img = cv2.imread('Live_Face_Recognition/Images/reference_img_one.jpg')
 
 def check_face(frame): # Machine learning function to check if user is Benit
     global face_match
+    global flag
     try: # Verify using DeepFace, copy() to avoid locking scenarios
         if DeepFace.verify(frame, reference_img.copy())['verified']:
             face_match = True
+            flag = 1
+        elif DeepFace.verify(frame, second_reference_img.copy())['verified']:
+            face_match = True
+            flag = 2
         else:
             face_match = False
     except ValueError:
@@ -49,9 +56,11 @@ while True:
                 pass
         counter += 1 # Increment counter
 
-        if face_match:
+        if face_match and flag == 1:
             """ If face is matched, display text on frame, font scale, color: BGR, thickness """
-            cv2.putText(frame, "Benit!", (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (0, 255, 0), 2)
+            cv2.putText(frame, "Benit no glasses!", (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (0, 255, 0), 2)
+        elif face_match and flag == 2:
+            cv2.putText(frame, "Benit with glasses!", (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (0, 255, 0), 2)
         else:
             cv2.putText(frame, 'Not Benit!', (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0 , 255), 2)
 
