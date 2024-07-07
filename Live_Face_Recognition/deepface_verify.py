@@ -19,7 +19,7 @@ def preprocess_image(img_path):
     return img
 
 # Load reference image
-reference_img_path = r'Live_Face_Recognition\Images\reference_img_one.jpg'
+reference_img_path = r'Live_Face_Recognition\Images\benitglasses_one.jpg'
 try:
     reference_img = preprocess_image(reference_img_path)
 except FileNotFoundError as e:
@@ -27,7 +27,7 @@ except FileNotFoundError as e:
     exit(1)
 
 # Load test image
-test_img_path = r'Live_Face_Recognition\Images\reference_img_two.jpg'
+test_img_path = r'Live_Face_Recognition\Images\benitglasses_compare.jpg'
 try:
     test_img = preprocess_image(test_img_path)
 except FileNotFoundError as e:
