@@ -38,11 +38,11 @@ for ref in reference_images.values():
 def check_face(frame): # Machine learning function to check if user is Benit
     global face_match
     global flag
-    global debounce_counter
+    # global debounce_counter
     try: # Verify using DeepFace, copy() to avoid locking scenarios
         for idx, ref in reference_images.items():
             result = DeepFace.verify(frame, ref.copy())
-            if result['verified']:
+            if result.get('verified', False) and result.get('confidence', 0.0) >= 0.5:
                 # debounce_counter += 1
                 # if debounce_counter >= debounce_threshold:
                 face_match = True # Indent Back
@@ -52,8 +52,9 @@ def check_face(frame): # Machine learning function to check if user is Benit
                 # else:
                 #     debounce_counter = 0
             face_match = False
-    except ValueError:
+    except (ValueError, KeyError) as e:
         face_match = False
+        print(f"Error while verifying face: {e}")
 
 while True:
     """ 
