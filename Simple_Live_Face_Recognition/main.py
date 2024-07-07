@@ -28,7 +28,7 @@ reference_images = {
     1: cv2.imread('Simple_Live_Face_Recognition/Images/reference_img_three.jpg'),
     2: cv2.imread('Simple_Live_Face_Recognition/Images/reference_img_basanta.jpg'),
     3: cv2.imread('Simple_Live_Face_Recognition/Images/reference_img_panday.jpg'),
-    4: cv2.imread('Simple_Live_Face_Recognition/Images/reference_img_one.jpg'),
+    4: cv2.imread('Simple_Live_Face_Recognition/Images/benitglasses_compare.jpg')
 }
 
 # Ensure image is loaded properly 
@@ -42,12 +42,12 @@ def check_face(frame): # Machine learning function to check if user is Benit
     try: # Verify using DeepFace, copy() to avoid locking scenarios
         for idx, ref in reference_images.items():
             result = DeepFace.verify(frame, ref.copy())
-            if result.get('verified', False) and result.get('confidence', 0.0) >= 0.5:
+            if result.get('verified', False): # and result.get('confidence', 0.0) >= 0.9:
                 # debounce_counter += 1
                 # if debounce_counter >= debounce_threshold:
                 face_match = True # Indent Back
                 flag = idx
-                debounce_counter = 0
+                # debounce_counter = 0
                 return
                 # else:
                 #     debounce_counter = 0
@@ -64,6 +64,13 @@ while True:
     ret, frame = cap.read()
 
     if ret:
+
+        # Convert BGR frame to RGB format 
+        # frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+        # Save the frame as an image 
+        cv2.imwrite(f'Simple_Live_Face_Recognition/Images/captured_frame_01.jpg', frame)
+
         if counter % 30 == 0: # Run every 30 frames
             try: # Starting a thread
                 threading.Thread(target = check_face, args = (frame.copy(),)).start() # Comma put because args needs to be a tuple 
@@ -75,8 +82,8 @@ while True:
         if flag == 1 and face_match:
             cv2.putText(frame, "Benit No Glasses!", (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (0, 255, 0), 2)
 
-        elif flag == 2 and face_match:
-            cv2.putText(frame, "Basanta!", (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 0), 2)
+        # elif flag == 2 and face_match:
+        #     cv2.putText(frame, "Basanta!", (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 0), 2)
 
         elif flag == 3 and face_match:
             cv2.putText(frame, "Panday!", (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 0, 0), 2)
