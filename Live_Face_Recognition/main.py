@@ -25,15 +25,20 @@ flag = 0
 reference_images = {
     1: cv2.imread('Live_Face_Recognition/Images/reference_img_six.png'),
     2: cv2.imread('Live_Face_Recognition/Images/reference_img_basanta.jpg'),
-    3: cv2.imread('Live_Face_Recognition/Images/reference_img_panday.jpg')
+    3: cv2.imread('Live_Face_Recognition/Images/reference_img_panday.jpg'),
+    4: cv2.imread('Live_Face_Recognition/Images/reference_img_one.jpg')
 }
+
+# Ensure image is loaded properly 
+for ref in reference_images.values():
+    assert ref is not None, f"{ref} could not be loaded"
 
 def check_face(frame): # Machine learning function to check if user is Benit
     global face_match
     global flag
     try: # Verify using DeepFace, copy() to avoid locking scenarios
         for id, ref in reference_images.items():
-            if DeepFace.verify(framne, ref_img.copy())['verified']:
+            if DeepFace.verify(frame, ref.copy())['verified']:
                 face_match = True
                 flag = id 
                 return
@@ -60,10 +65,16 @@ while True:
             """ If face is matched, display text on frame, font scale, color: BGR, thickness """
             if flag == 1:
                 cv2.putText(frame, "Benit no glasses!", (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 0), 2)
-            elif flag == 2:
-                cv2.putText(frame, "Basanta!", (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (0, 255, 0), 2)
-            elif flag == 3:
-                cv2.putText(frame, "Panday!", (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 0, 0), 2)
+
+            # elif flag == 2:
+            #     cv2.putText(frame, "Basanta!", (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (0, 255, 0), 2)
+
+            # elif flag == 3:
+            #     cv2.putText(frame, "Panday!", (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 0, 0), 2)
+
+            elif flag == 4:
+                cv2.putText(frame, "Benit with glasses!", (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 0, 0), 2)
+
         else:
             cv2.putText(frame, 'Not Recognized!', (20, 450), cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0 , 255), 2)
 
