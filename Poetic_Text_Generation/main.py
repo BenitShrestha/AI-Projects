@@ -15,7 +15,7 @@ def load_data():
 
     text = open(filepath, 'rb').read().decode(encoding='utf-8').lower()
 
-    text = text[30000:80000] # Slicing to reduce actual data size 
+    text = text[:500000] # Slicing to reduce actual data size 
 
     characters = sorted(set(text)) # Unique characters using Set 
 
@@ -26,8 +26,8 @@ def load_data():
     return text, char_to_index, index_to_char, characters
 
 def prepare_data(text, char_to_index):
-    SEQ_LENGTH = 50 # Set sequence length for next character prediction 
-    STEP_SIZE = 5 # Samples of sequence taken after every 3 characters -- Hello, this is Benit : lo, 
+    SEQ_LENGTH = 100 # Set sequence length for next character prediction 
+    STEP_SIZE = 10 # Samples of sequence taken after every 3 characters -- Hello, this is Benit : lo, 
 
     """ To store sentences and generate next characters, example: The Sky is Blu e """
     sentences = []
@@ -55,7 +55,7 @@ def build_model(input_shape, num_classes):
     """ Model Creation """
     model = Sequential()
 
-    """ Simple LSTM -- Loss of 1.29+ ran for 15 epochs (128 Neurons in LSTM) -- Loss of 1.68+ ran for 15 epochs (256 Neurons in LSTM) """
+    """ Simple LSTM -- Loss of  0.1033 ran for 100 epochs (256 Neurons in LSTM) """
     model.add(LSTM(256, input_shape=input_shape)) # LSTM(neurons, input_shape)
     model.add(Dense(num_classes)) # No. of neurons = Length of characters
     model.add(Activation('softmax')) # Scales output so its values add up to 1, probability of next character
@@ -86,7 +86,7 @@ def sample(preds, temperature=1.0):
 
 def generate_text(model, text, char_to_index, index_to_char, characters, length, temperature):
     """ Randomly assigns a starting character at an index, and takes 40 characters at a time, -1 because indices """
-    SEQ_LENGTH = 50
+    SEQ_LENGTH = 100
     start_index = random.randint(0, len(text) - SEQ_LENGTH - 1)
     generated = ''
     sentence = text[start_index: start_index + SEQ_LENGTH]
@@ -114,10 +114,10 @@ def main():
     model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.001))
 
     """ Model Training """
-    model.fit(x, y, batch_size=256, epochs=15)
+    model.fit(x, y, batch_size=256, epochs=85)
 
     """ Model Saving """
-    model.save('Models/poetic_text_generator_base.keras')
+    model.save('poetic_text_generator_base.keras')
 
 if __name__ == "__main__":
     main() 
