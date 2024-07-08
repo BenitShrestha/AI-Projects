@@ -56,17 +56,17 @@ def build_model(input_shape, num_classes):
     model = Sequential()
 
     """ Simple LSTM -- Loss of  0.1033 ran for 100 epochs (256 Neurons in LSTM) """
-    model.add(LSTM(256, input_shape=input_shape)) # LSTM(neurons, input_shape)
-    model.add(Dense(num_classes)) # No. of neurons = Length of characters
-    model.add(Activation('softmax')) # Scales output so its values add up to 1, probability of next character
+    # model.add(LSTM(256, input_shape=input_shape)) # LSTM(neurons, input_shape)
+    # model.add(Dense(num_classes)) # No. of neurons = Length of characters
+    # model.add(Activation('softmax')) # Scales output so its values add up to 1, probability of next character
 
     """ LSTMs with dropout layers -- Doesn't work well, loss is too high (3.0+) ran for 15 epochs """
-    # model.add(LSTM(256, input_shape=input_shape, return_sequences=True))
-    # model.add(Dropout(0.2)) # Dropout layer
-    # model.add(LSTM(128))
-    # model.add(Dropout(0.2)) # Another Dropout layer
-    # model.add(Dense(num_classes))
-    # model.add(Activation('softmax'))
+    model.add(LSTM(256, input_shape=input_shape, return_sequences=True))
+    model.add(Dropout(0.2)) # Dropout layer
+    model.add(LSTM(128))
+    model.add(Dropout(0.2)) # Another Dropout layer
+    model.add(Dense(num_classes))
+    model.add(Activation('softmax'))
 
     """ Bidirectional LSTM -- Starts off strong but stagnates later on, loss of 1.24+ ran for 15 epochs """
     # model.add(Bidirectional(LSTM(256), input_shape=input_shape)) # Bidirectional LSTM
@@ -114,10 +114,10 @@ def main():
     model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.001))
 
     """ Model Training """
-    model.fit(x, y, batch_size=256, epochs=85)
+    model.fit(x, y, batch_size=256, epochs=100)
 
     """ Model Saving """
-    model.save('poetic_text_generator_base.keras')
+    model.save('poetic_text_generator_base_dropout.keras')
 
 if __name__ == "__main__":
     main() 
