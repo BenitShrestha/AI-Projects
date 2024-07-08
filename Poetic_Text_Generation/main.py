@@ -61,17 +61,17 @@ def build_model(input_shape, num_classes):
     # model.add(Activation('softmax')) # Scales output so its values add up to 1, probability of next character
 
     """ LSTMs with dropout layers -- Doesn't work well, loss is too high (3.0+) ran for 15 epochs """
-    model.add(LSTM(256, input_shape=input_shape, return_sequences=True))
-    model.add(Dropout(0.2)) # Dropout layer
-    model.add(LSTM(128))
-    model.add(Dropout(0.2)) # Another Dropout layer
-    model.add(Dense(num_classes))
-    model.add(Activation('softmax'))
+    # model.add(LSTM(256, input_shape=input_shape, return_sequences=True))
+    # model.add(Dropout(0.2)) # Dropout layer
+    # model.add(LSTM(128))
+    # model.add(Dropout(0.2)) # Another Dropout layer
+    # model.add(Dense(num_classes))
+    # model.add(Activation('softmax'))
 
     """ Bidirectional LSTM -- Starts off strong but stagnates later on, loss of 1.24+ ran for 15 epochs """
-    # model.add(Bidirectional(LSTM(256), input_shape=input_shape)) # Bidirectional LSTM
-    # model.add(Dense(num_classes))
-    # model.add(Activation('softmax'))      
+    model.add(Bidirectional(LSTM(256), input_shape=input_shape)) # Bidirectional LSTM
+    model.add(Dense(num_classes))
+    model.add(Activation('softmax'))      
 
     return model
 
@@ -117,7 +117,7 @@ def main():
     model.fit(x, y, batch_size=256, epochs=100)
 
     """ Model Saving """
-    model.save('poetic_text_generator_base_dropout.keras')
+    model.save('poetic_text_generator_BiLSTM.keras')
 
 if __name__ == "__main__":
     main() 
