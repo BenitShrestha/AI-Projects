@@ -54,7 +54,7 @@ def check_face(frame): # Machine learning function to check if user is Benit
             face_match = False
     except (ValueError, KeyError) as e:
         face_match = False
-        print(f"Error while verifying face: {e}")
+        # print(f"Error while verifying face: {e}")
 
 while True:
     """ 
