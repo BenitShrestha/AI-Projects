@@ -35,6 +35,27 @@ reference_images = {
 for ref in reference_images.values():
     assert ref is not None, f"{ref} could not be loaded"
 
+def preprocess_image(image, target_size = (224, 224)):
+    """ Preprocess image by Resizing, normalizing pixel values, converting color spaces and histogram equalization """
+
+    # Convert to RGB
+    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+    # Resize the image 
+    image_resized = cv2.resize(image_rgb, target_size)
+
+    # Normalize pixel values
+    image_normalized = image_resized / 255.0
+
+    # Histogram equalization 
+    image_equalized = cv2.equalizeHist(cv2.cvtColor(image_resized, cv2.COLOR_RGB2GRAY))
+    image_equalized = cv2.cvtColor(image_equalized, cv2.COLOR_GRAY2RGB)
+
+    return image_equalized
+
+for idx in reference_images:
+    reference_images[idx] = preprocess_image(reference_images[idx])
+
 def check_face(frame): # Machine learning function to check if user is Benit
     global face_match
     global flag
@@ -68,12 +89,15 @@ while True:
         # Convert BGR frame to RGB format 
         # frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
+        # Preprocess captured frame
+        preprocessed_frame = preprocess_image(frame)
+
         # Save the frame as an image 
-        cv2.imwrite(f'Simple_Live_Face_Recognition/Images/captured_frame_01.jpg', frame)
+        cv2.imwrite(f'Simple_Live_Face_Recognition/Images/captured_frame_01.jpg', preprocessed_frame)
 
         if counter % 30 == 0: # Run every 30 frames
             try: # Starting a thread
-                threading.Thread(target = check_face, args = (frame.copy(),)).start() # Comma put because args needs to be a tuple 
+                threading.Thread(target = check_face, args = (preprocessed_frame.copy(),)).start() # Comma put because args needs to be a tuple 
             except ValueError:
                 pass
         counter += 1 # Increment counter
