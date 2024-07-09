@@ -19,12 +19,22 @@ reference_images = {
 }
 
 # Image preprocessing - recolor, resize, normalize
-def preprocess_image(image, target_size=(224, 224)):
+def preprocess_image(image, target_size=(256, 256)):
     """ Preprocess captured frames """
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
     image_resized = cv2.resize(image_rgb, target_size)
+
     image_normalized = image_resized / 255.0
-    return image_normalized
+
+    # Apply histogram equalization
+    image_gray = cv2.cvtColor(image_resized, cv2.COLOR_RGB2GRAY)  
+    image_equalized = cv2.equalizeHist(image_gray)
+    
+    # Convert equalized grayscale image back to RGB
+    image_equalized_rgb = cv2.cvtColor(image_equalized, cv2.COLOR_GRAY2RGB)
+
+    return image_equalized_rgb
 
 # Preprocess reference images
 for idx, ref_path in reference_images.items():
@@ -39,9 +49,11 @@ for idx, ref_path in reference_images.items():
         continue
 
     else:
+        img_name = ref_path[36:-4]
+        print(img_name)
         preprocessed_image = preprocess_image(ref_image)
-        cv2.imwrite(f'Simple_Live_Face_Recognition/Preprocessed_Images/{ref_path[:-4]}_preprocessed.jpg', preprocessed_image)
-        
+        cv2.imwrite(f'Simple_Live_Face_Recognition/Preprocessed_Images/{img_name}_preprocessed.jpg', preprocessed_image)
+
         reference_images[idx] = ref_image # Loads dictonary with cv2.imread(paths)
         print(f"Flag {idx}: {ref_path}")
 
@@ -93,6 +105,6 @@ while True:
     key = cv2.waitKey(1)
     if key == ord("q"):
         break
-cv2.imwrite(f'Simple_Live_Face_Recognition/Images/captured_frame.jpg', preprocessed_frame)  # Save captured frame
+cv2.imwrite(f'Simple_Live_Face_Recognition/Images/1_captured_frame.jpg', preprocessed_frame)  # Save captured frame
 cv2.destroyAllWindows()
 cap.release()
