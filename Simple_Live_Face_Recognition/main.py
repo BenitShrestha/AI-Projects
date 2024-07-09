@@ -18,25 +18,32 @@ reference_images = {
     5: 'Simple_Live_Face_Recognition/Images/ashish_webcam_1.jpg'
 }
 
-# Preprocess reference images
-for idx, ref_path in reference_images.items():
-    if not os.path.exists(ref_path):
-        print(f"Error: File not found - {ref_path}")
-        continue
-
-    ref_image = cv2.imread(ref_path)
-    if ref_image is None:
-        print(f"Error loading image from path: {ref_path}")
-    else:
-        reference_images[idx] = ref_image # Loads dictonary with cv2.imread(paths)
-        print(f"Preprocessed reference image {idx}: {ref_path}")
-
+# Image preprocessing - recolor, resize, normalize
 def preprocess_image(image, target_size=(224, 224)):
     """ Preprocess captured frames """
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image_resized = cv2.resize(image_rgb, target_size)
     image_normalized = image_resized / 255.0
     return image_normalized
+
+# Preprocess reference images
+for idx, ref_path in reference_images.items():
+    ref_image = cv2.imread(ref_path)
+
+    if not os.path.exists(ref_path):
+        print(f"Error: File not found - {ref_path}")
+        continue
+
+    if ref_image is None:
+        print(f"Error loading image from path: {ref_path}")
+        continue
+
+    else:
+        preprocessed_image = preprocess_image(ref_image)
+        cv2.imwrite(f'Simple_Live_Face_Recognition/Preprocessed_Images/{ref_path[:-4]}_preprocessed.jpg', preprocessed_image)
+        
+        reference_images[idx] = ref_image # Loads dictonary with cv2.imread(paths)
+        print(f"Flag {idx}: {ref_path}")
 
 def check_face(frame):
     global face_match, flag
@@ -50,16 +57,15 @@ def check_face(frame):
                 print(f'Face matched with reference image at index {idx}')
                 return
     except (ValueError, KeyError) as e:
-        face_match = False
-        print(f"Error while verifying face: {e}")
+        pass
+        # face_match = False
+        # print(f"Error while verifying face: {e}")
 
 counter = 0
 while True:
     ret, frame = cap.read()  # Capture frame from camera
     if ret:
         preprocessed_frame = preprocess_image(frame)  # Preprocess captured frame
-        cv2.imwrite(f'Simple_Live_Face_Recognition/Images/captured_frame_{counter}.jpg', frame)  # Save captured frame
-
         if counter % 15 == 0:  # Run face verification every 15 frames
             try:
                 threading.Thread(target=check_face, args=(preprocessed_frame.copy(),)).start()  # Start face verification in a thread
@@ -87,6 +93,6 @@ while True:
     key = cv2.waitKey(1)
     if key == ord("q"):
         break
-
+cv2.imwrite(f'Simple_Live_Face_Recognition/Images/captured_frame.jpg', preprocessed_frame)  # Save captured frame
 cv2.destroyAllWindows()
 cap.release()
