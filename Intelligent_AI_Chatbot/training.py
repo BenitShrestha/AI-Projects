@@ -50,24 +50,24 @@ pickle.dump(classes, open('Intelligent_AI_Chatbot/Pickle Files/classes.pkl', 'wb
 training = []
 output_empty = [0] * len(classes) # List of zeros with length of classes
 
-# # Preparing training data
-# for document in documents:
-#     bag = []
-#     word_patterns = document[0]
-#     word_patterns = [lemmatizer.lemmatize(word.lower()) for word in word_patterns]
-#     for word in words:
-#         bag.append(1) if word in word_patterns else bag.append(0)
+# Preparing training data
+for document in documents:
+    bag = []
+    word_patterns = document[0]
+    word_patterns = [lemmatizer.lemmatize(word.lower()) for word in word_patterns]
+    for word in words:
+        bag.append(1) if word in word_patterns else bag.append(0)
 
-#     output_row = list(output_empty)
-#     output_row[classes.index(document[1])] = 1
-#     training.append([bag, output_row])
+    output_row = list(output_empty)
+    output_row[classes.index(document[1])] = 1
+    training.append([bag, output_row])
  
-# # Shuffle, randomize data
-# random.shuffle(training)
-# training = np.array(training)
+# Shuffle, randomize data
+random.shuffle(training)
+training = np.array(training)
 
-# train_x = list(training[:, 0])
-# train_y = list(training[:, 1])
+train_x = list(training[:, 0])
+train_y = list(training[:, 1])
 
 # # Building Model
 # model = Sequential()
