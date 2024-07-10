@@ -43,5 +43,23 @@
         "tag": "hours",
         "patterns": ["What are your opening hours?", "When do you open and close?", "What time do you close today?"],
         "responses": ["We are open from [opening time] to [closing time] every day.", "Our hours are [opening hours].", "Today, we close at [closing time]."]
-    }            
+    },
+    {
+        "tag": "products",
+        "patterns": [
+            "What products do you offer?",
+            "Can you tell me about your products?",
+            "What do you sell?",
+            "List your products.",
+            "What items are available for purchase?"
+        ],
+        "responses": [
+            "We offer a wide range of products including [product list].",
+            "Our available products are [product list].",
+            "You can purchase [product list] from us.",
+            "Currently, we sell [product list].",
+            "Our product range includes [product list]."
+        ]
+    }
+                
 ]}
