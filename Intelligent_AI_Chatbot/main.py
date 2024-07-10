@@ -2,7 +2,9 @@
 # Statically typed into a JSON file, has static response to user input
 
 # Chatbot
-
+import json
+import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 import random 
 import pickle
 import nltk
@@ -28,7 +30,7 @@ def bag_of_words(sentence):
     sentence_words = clean_up_sentence(sentence)
     bag = [0] * len(words)
     for w in sentence_words:
-        for i in enumerate(words):
+        for i, word in enumerate(words):
             if word == w:
                 bag[i] = 1
     return np.array(bag)
@@ -39,7 +41,7 @@ def predict_class(sentence):
     ERROR_THRESHOLD = 0.25 # 25% threshold for uncertainty
     results = [[i, r] for i, r in enumerate(res) if r > ERROR_THRESHOLD] # Get index of class and probabilites too
     
-    results = sort(key = lambda x: x[1], reverse = True) # Sort based on probability, high to low
+    results.sort(key = lambda x: x[1], reverse = True) # Sort based on probability, high to low
     return_list =[] 
     for r in results:
         return_list.append({'intent': classes[r[0]], 'probability': str(r[1])}) # Return list full of intents/classes and probability
