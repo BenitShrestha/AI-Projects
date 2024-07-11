@@ -1,0 +1,83 @@
+{
+    "intents": [
+        {
+            "tag": "greetings",
+            "patterns": ["hello", "hey", "hi", "greetings", "good day", "what's up", "how is it going?"],
+            "responses": ["Hello Tarnished!", "Hey there adventurer!", "Hi there brave soul!", "Greetings, seeker of the Elden Ring!"]
+        },
+        {
+            "tag": "goodbye",
+            "patterns": ["bye", "see you later", "goodbye"],
+            "responses": ["Farewell, may the grace guide you!", "See you in the Lands Between!", "Safe travels, Tarnished!"]
+        },
+        {
+            "tag": "thanks",
+            "patterns": ["thank you", "thanks"],
+            "responses": ["Glad to assist a fellow adventurer!", "Any time, brave soul!", "You're welcome, Tarnished!"]
+        },
+        {
+            "tag": "name",
+            "patterns": ["what's your name", "what should I call you", "what's your name?"],
+            "responses": ["You can call me Chatbot, the lorekeeper!", "My name is Chatbot, guardian of Elden lore!", "I'm Chatbot, at your service!"]
+        },
+        {
+            "tag": "help",
+            "patterns": ["help", "can you help?", "anyone help?"],
+            "responses": ["How can I assist you on your quest?", "I am here to help, what do you need?", "Tell me what you seek, and I shall guide you."]
+        },
+        {
+            "tag": "elden_ring_lore",
+            "patterns": ["tell me about the Elden Ring", "what is the Elden Ring", "Elden Ring lore", "story of Elden Ring"],
+            "responses": ["The Elden Ring is a mysterious and powerful artifact that governs the very order of the world in the Lands Between.", "The lore of Elden Ring revolves around the quest to restore the Elden Ring and become the Elden Lord.", "In the Lands Between, the Elden Ring has been shattered, causing chaos and conflict."]
+        },
+        {
+            "tag": "characters",
+            "patterns": ["who are the main characters in Elden Ring", "tell me about the characters in Elden Ring", "Elden Ring characters"],
+            "responses": ["The key characters in Elden Ring include the Tarnished, Queen Marika, Godfrey, and the demigods such as Malenia and Radahn.", "You will encounter various characters like Melina, who acts as a guide, and Ranni the Witch, who has her own mysterious agenda."]
+        },
+        {
+            "tag": "famous_dialogues",
+            "patterns": ["famous dialogues in Elden Ring", "quotes from Elden Ring", "Elden Ring quotes", "memorable dialogues in Elden Ring"],
+            "responses": [
+                "'Rise, Tarnished, and be guided by grace to brandish the power of the Elden Ring.'",
+                "'I am Melina. I offer you an accord.'",
+                "'The Lands Between, a place both wondrous and perilous, where the Elden Ring holds sway over all.'"
+            ]
+        },
+        {
+            "tag": "bosses",
+            "patterns": ["who are the bosses in Elden Ring", "Elden Ring bosses", "tell me about the bosses in Elden Ring"],
+            "responses": ["Elden Ring features formidable bosses such as Godrick the Grafted, Rennala, Queen of the Full Moon, and the fearsome Malenia, Blade of Miquella.", "Each boss in Elden Ring offers a unique challenge and contributes to the rich lore of the game."]
+        },
+        {
+            "tag": "locations",
+            "patterns": ["what are the locations in Elden Ring", "Elden Ring locations", "tell me about the places in Elden Ring"],
+            "responses": ["The Lands Between is vast and includes diverse locations like Limgrave, the Academy of Raya Lucaria, and the haunted region of Caelid.", "Each location in Elden Ring is intricately designed and holds secrets waiting to be discovered."]
+        },
+        {
+            "tag": "margit",
+            "patterns": ["margit dialogue", "what does margit say", "margit the fell omen"],
+            "responses": ["**'Foul Tarnished, emboldened by the flame of ambition.'**", "**'Let it be Margit the Fell.'**"]
+        },
+        {
+            "tag": "rykard",
+            "patterns": ["rykard dialogue", "what does rykard say", "rykard lord of blasphemy"],
+            "responses": ["**'Devour the gods together!'**", "**'Join the Serpent King as family.'**"]
+        },
+        {
+            "tag": "malenia",
+            "patterns": ["malenia dialogue", "what does malenia say", "malenia blade of miquella"],
+            "responses": ["**'I am Malenia, Blade of Miquella.'**", "**'I have never known defeat.'**"]
+        },
+        {
+            "tag": "godrick",
+            "patterns": ["godrick dialogue", "what does godrick say", "godrick the grafted"],
+            "responses": ["**'I am the lord of all that is golden.'**", "**'After all that, grafting your arms to mine will be easy.'**"]
+        },
+        {
+            "tag": "foul_tarnished",
+            "patterns": ["foul tarnished", "you foul tarnished"],
+            "responses": ["**'Emboldened by the flame of ambition!'**", "**'In search of the Elden Ring, tarnished!'**"]
+        }
+    ]
+}
