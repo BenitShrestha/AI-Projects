@@ -73,11 +73,11 @@ train_y = np.array([item[1] for item in training], dtype=np.float32)  # Convert 
 # Building Model
 model = Sequential()
 model.add(Dense(256, input_shape = (len(train_x[0]), ) , activation = 'relu'))
-model.add(Dropout(0.25))
+model.add(Dropout(0.5))
 model.add(Dense(128, activation = 'relu'))
 model.add(Dropout(0.25))
 model.add(Dense(64, activation = 'relu'))
-model.add(Dropout(0.25))
+# model.add(Dropout(0.25))
 model.add(Dense(len(train_y[0]), activation = 'softmax'))
 
 # Optimizer, loss function and compilation
