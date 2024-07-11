@@ -16,11 +16,11 @@ from tensorflow.keras.optimizers import SGD
 lemmatizer = WordNetLemmatizer()
 
 # Load JSON file
-intents = json.loads(open('Intelligent_AI_Chatbot/intents.json').read())
+intents = json.loads(open('Intelligent_AI_Chatbot/JSON_Files/intents_eldenring.json').read())
 
-words = []
-classes = []
-documents = []
+words = [] # Keeps tokenized words from pattern
+classes = [] # Keep tags
+documents = [] # Keeps words and tags
 ignore_letters = ['?','!', '.', ',']
 
 for intent in intents['intents']: # Key intents - Basically a dictionary
@@ -35,15 +35,16 @@ for intent in intents['intents']: # Key intents - Basically a dictionary
 # print(words) # Includes repeated as well as unique words
 # print(documents)
 
-words = [lemmatizer.lemmatize(word) for word in words if word not in ignore_letters]
+""" Edit words list, by lemmatizing words -- i.e. 'works', 'working' -> 'work' """
+words = [lemmatizer.lemmatize(word) for word in words if word not in ignore_letters] # First lemmatize done for saving in pickle file
 
-words = sorted(set(words))
+words = sorted(set(words)) # Sorted and unique words
 classes = sorted(set(classes))
 
 # print(words) # Lemmatized words, unique and sorted list
 # print(classes) # Unique tags
 
-pickle.dump(words, open('Intelligent_AI_Chatbot/Pickle_Files/words.pkl', 'wb'))
+pickle.dump(words, open('Intelligent_AI_Chatbot/Pickle_Files/words.pkl', 'wb')) # For serialization, deserialization -- Objects, types to bytes
 pickle.dump(classes, open('Intelligent_AI_Chatbot/Pickle_Files/classes.pkl', 'wb'))
 
 """ Bag of Words - 0s and 1s: If word is present, 1, else 0 """
@@ -51,10 +52,10 @@ training = []
 output_empty = [0] * len(classes) # List of zeros with length of classes
 
 # Preparing training data
-for document in documents:
+for document in documents: # Document consists of words from patterns and tags
     bag = []
-    word_patterns = document[0]
-    word_patterns = [lemmatizer.lemmatize(word.lower()) for word in word_patterns]
+    word_patterns = document[0] # Accessing words from patterns
+    word_patterns = [lemmatizer.lemmatize(word.lower()) for word in word_patterns] # Second Lemmatize for bag of words probabaly
     for word in words:
         bag.append(1) if word in word_patterns else bag.append(0)
 
@@ -71,10 +72,12 @@ train_y = np.array([item[1] for item in training], dtype=np.float32)  # Convert 
 
 # Building Model
 model = Sequential()
-model.add(Dense(128, input_shape = (len(train_x[0]), ) , activation = 'relu'))
-model.add(Dropout(0.5))
+model.add(Dense(256, input_shape = (len(train_x[0]), ) , activation = 'relu'))
+model.add(Dropout(0.25))
+model.add(Dense(128, activation = 'relu'))
+model.add(Dropout(0.25))
 model.add(Dense(64, activation = 'relu'))
-model.add(Dropout(0.5))
+model.add(Dropout(0.25))
 model.add(Dense(len(train_y[0]), activation = 'softmax'))
 
 # Optimizer, loss function and compilation
@@ -82,8 +85,8 @@ sgd = SGD(learning_rate = 0.01, decay = 1e-6, momentum = 0.9, nesterov = True)
 model.compile(loss = 'categorical_crossentropy', optimizer = sgd, metrics = ['accuracy'])
 
 # Fitting
-model.fit(train_x, train_y, epochs = 200, batch_size = 5, verbose = 1)
+model.fit(train_x, train_y, epochs = 300, batch_size = 5, verbose = 1)
 
-model.save('Intelligent_AI_Chatbot/Models/Chat_Bot_Model.keras')
+model.save('Intelligent_AI_Chatbot/Models/Chat_Bot_Model_eldenring.keras')
 
 print("Done!")
