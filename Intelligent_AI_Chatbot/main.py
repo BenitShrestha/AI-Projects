@@ -14,11 +14,11 @@ from tensorflow.keras.models import load_model
 
 # Intialization of JSON file, Pickle files and Model
 lemmatizer = WordNetLemmatizer()
-intents = json.loads(open('Intelligent_AI_Chatbot/intents.json').read())
+intents = json.loads(open('Intelligent_AI_Chatbot/JSON_Files/intents.json').read())
 
 words = pickle.load(open('Intelligent_AI_Chatbot/Pickle_Files/words.pkl', 'rb'))
 classes = pickle.load(open('Intelligent_AI_Chatbot/Pickle_Files/classes.pkl', 'rb'))
-model = load_model('Intelligent_AI_Chatbot/Models/Chat_Bot_Model.keras')
+model = load_model('Intelligent_AI_Chatbot/Models/Chat_Bot_Model_normal.keras')
 
 # Working Functions
 def clean_up_sentence(sentence):
@@ -50,6 +50,7 @@ def predict_class(sentence):
 def get_response(intents_list, intents_json):
     tag = intents_list[0]['intent']
     list_of_intents = intents_json['intents']
+    result = "Sorry, I didn't get that. Please try again."
     for i in list_of_intents:
         if i['tag'] == tag:
             result = random.choice(i['responses'])
@@ -61,5 +62,8 @@ print('Chatbot is running!')
 while True:
     message = input("")
     ints = predict_class(message)
-    res = get_response(ints, intents)
+    if ints: # Check if prediction returned any intents
+        res = get_response(ints, intents)
+    else:
+        res = "Sorry I got confused"
     print(res)

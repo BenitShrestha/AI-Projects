@@ -16,7 +16,7 @@ from tensorflow.keras.optimizers import SGD
 lemmatizer = WordNetLemmatizer()
 
 # Load JSON file
-intents = json.loads(open('Intelligent_AI_Chatbot/JSON_Files/intents_eldenring.json').read())
+intents = json.loads(open('Intelligent_AI_Chatbot/JSON_Files/intents.json').read())
 
 words = [] # Keeps tokenized words from pattern
 classes = [] # Keep tags
@@ -87,6 +87,6 @@ model.compile(loss = 'categorical_crossentropy', optimizer = sgd, metrics = ['ac
 # Fitting
 model.fit(train_x, train_y, epochs = 300, batch_size = 5, verbose = 1)
 
-model.save('Intelligent_AI_Chatbot/Models/Chat_Bot_Model_eldenring.keras')
+model.save('Intelligent_AI_Chatbot/Models/Chat_Bot_Model_normal.keras')
 
 print("Done!")
