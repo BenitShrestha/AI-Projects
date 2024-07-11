@@ -77,7 +77,7 @@
         {
             "tag": "foul_tarnished",
             "patterns": ["foul tarnished", "you foul tarnished"],
-            "responses": ["**'Emboldened by the flame of ambition!'**", "**'In search of the Elden Ring, tarnished!'**"]
+            "responses": ["**'Emboldened by the flame of ambition!'**", "**'In search of the Elden Ring, tarnished!'**", "Put thy foolish ambitions to rest"]
         }
     ]
 }
