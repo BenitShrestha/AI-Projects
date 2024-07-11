@@ -1,84 +1,103 @@
-Workflow Involved:
-1. Importing Necessary Libraries and Modules
+# Steps involved with examples
 
-    Importing Standard Libraries:
-        random: For shuffling the training data.
-        json: For loading JSON files.
-        pickle: For saving and loading serialized data.
-        numpy: For numerical operations and array handling.
+1. Import Necessary Libraries and Modules
 
-    Setting Environment Variables:
-        os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0': Disables certain TensorFlow optimizations for compatibility.
-
-    Importing NLP and ML Libraries:
-        nltk: Natural Language Toolkit for text processing.
-        WordNetLemmatizer: For reducing words to their base forms.
-        tensorflow.keras: Keras API within TensorFlow for building and training neural networks.
-
-2. Initializing Variables and Loading Data
-
-    Creating Lemmatizer:
-        lemmatizer = WordNetLemmatizer(): Initializes an instance of WordNetLemmatizer for reducing words to their base forms.
-
-    Loading JSON File:
-        intents = json.loads(open('Intelligent_AI_Chatbot/JSON_Files/intents.json').read()): Loads the JSON file containing the chatbot intents and patterns into a Python dictionary.
-
-    Creating Empty Lists:
-        words: List to store all words from patterns.
-        classes: List to store unique tags (intents).
-        documents: List to store pairs of tokenized words and their corresponding tags.
-        ignore_letters: List of punctuation to be ignored.
+2. Intializing Variables and Loading Data
 
 3. Tokenizing and Lemmatizing Patterns
 
-    Iterating Over Intents:
-        for intent in intents['intents']: Iterates over each intent in the JSON file.
+    Code:
+    for intent in intents['intents']:
+        for pattern in intent['patterns']:
+            word_list = nltk.word_tokenize(pattern)
+            words.extend(word_list)
+            documents.append((word_list, intent['tag']))
+            if intent['tag'] not in classes:
+                classes.append(intent['tag'])
 
-    Tokenizing Words:
-        word_list = nltk.word_tokenize(pattern): Splits each pattern into words.
-        words.extend(word_list): Adds the words from the pattern to the words list.
-        documents.append((word_list, intent['tag'])): Adds a tuple of words and their corresponding tag to documents.
+    Suppose a JSON contains:
+    {
+    "intents": [
+        {
+        "tag": "greeting",
+        "patterns": ["Hello", "Hi", "Greetings"],
+        "responses": ["Hello!", "Hi there!"]
+        },
+        {
+        "tag": "goodbye",
+        "patterns": ["Bye", "See you later", "Goodbye"],
+        "responses": ["Goodbye!", "See you later!"]
+        }
+    ]
+    }
 
-    Storing Unique Classes:
-        if intent['tag'] not in classes: Ensures each tag is added only once to classes.
+    After processing:
+
+        words: ['Hello', 'Hi', 'Greetings', 'Bye', 'See', 'you', 'later', 'Goodbye']
+        classes: ['greeting', 'goodbye']
+        documents: [(['Hello'], 'greeting'), (['Hi'], 'greeting'), (['Greetings'], 'greeting'), (['Bye'], 'goodbye'), (['See', 'you', 'later'], 'goodbye'), (['Goodbye'], 'goodbye')]
 
 4. Lemmatizing and Sorting Words and Classes
 
-    Lemmatizing Words:
-        words = [lemmatizer.lemmatize(word) for word in words if word not in ignore_letters]: Lemmatizes and removes punctuation from words.
+    Code:
+    words = [lemmatizer.lemmatize(word) for word in words if word not in ignore_letters]
+    words = sorted(set(words))
+    classes = sorted(set(classes))
 
-    Removing Duplicates and Sorting:
-        words = sorted(set(words)): Removes duplicates and sorts the words.
-        classes = sorted(set(classes)): Removes duplicates and sorts the classes.
+    Example
+        Here, lemmatization isn't really done but if JSON had something like "working", "works" - It would be lemmatized to "work"
+        words (after lemmatization and sorting): ['Bye', 'Goodbye', 'Greetings', 'Hello', 'Hi', 'See', 'later', 'you']
+        classes (after sorting): ['goodbye', 'greeting']
 
 5. Saving Preprocessed Data to Pickle Files
 
-    Serializing Words and Classes:
-        pickle.dump(words, open('Intelligent_AI_Chatbot/Pickle_Files/words.pkl', 'wb')): Saves the words list to a pickle file.
-        pickle.dump(classes, open('Intelligent_AI_Chatbot/Pickle_Files/classes.pkl', 'wb')): Saves the classes list to a pickle file.
-
 6. Creating Training Data
 
-    Initializing Training Data Structures:
-        training: An empty list to store the training data.
-        output_empty: A list of zeros with a length equal to the number of classes.
+    Code:
+    training = []
+    output_empty = [0] * len(classes)
 
-    Generating Bag of Words and One-Hot Encoded Labels:
-        for document in documents: Iterates over each document in documents.
-        word_patterns = document[0]: Extracts the list of words from the current document's pattern.
-        word_patterns = [lemmatizer.lemmatize(word.lower()) for word in word_patterns]: Lemmatizes each word in word_patterns and converts them to lowercase.
-        for word in words: Iterates over each unique word in words.
-        bag.append(1) if word in word_patterns else bag.append(0): Creates a binary vector (bag-of-words) indicating the presence or absence of each word in the current pattern.
-        output_row = list(output_empty): Creates a copy of the output_empty list to initialize the one-hot encoded label for the current document.
-        output_row[classes.index(document[1])] = 1: Sets the index of the current document's tag to 1 in output_row.
-        training.append([bag, output_row]): Appends the pair [bag, output_row] to the training list.
+    for document in documents:
+        bag = []
+        word_patterns = document[0]
+        word_patterns = [lemmatizer.lemmatize(word.lower()) for word in word_patterns]
+        for word in words:
+            bag.append(1) if word in word_patterns else bag.append(0)
+        
+        output_row = list(output_empty)
+        output_row[classes.index(document[1])] = 1 # Finds index
+        training.append([bag, output_row])
 
-7. Shuffling and Converting Training Data to NumPy Arrays
+    random.shuffle(training)
+    training = np.array(training, dtype=object)
 
-    Randomly Shuffling Training Data:
-        random.shuffle(training): Shuffles the training data to ensure that the order of examples does not affect the training process.
+    train_x = np.array([item[0] for item in training], dtype=np.float32)
+    train_y = np.array([item[1] for item in training], dtype=np.float32)
 
-    Converting to NumPy Arrays:
-        training = np.array(training, dtype=object): Converts the training list into a NumPy array with dtype=object.
-        train_x = np.array([item[0] for item in training], dtype=np.float32): Extracts feature vectors (bag-of-words representations) from training and converts them into a NumPy array.
-        train_y = np.array([item[1] for item in training], dtype=np.float32): Extracts labels (one-hot encoded vectors) from training and converts them into a NumPy array.
+    Example
+
+    For the first document (['Hello'], 'greeting'):
+
+        word_patterns: ['hello'] (after lemmatization and lowercasing)
+        bag: [0, 0, 0, 1, 0, 0, 0, 0] (only 'Hello' is present, so the fourth position is 1)
+        output_row: [0, 1] (corresponding to the 'greeting' class)
+
+    For the second document (['Bye'], 'goodbye'):
+
+        word_patterns: ['bye']
+        bag: [1, 0, 0, 0, 0, 0, 0, 0] (only 'Bye' is present, so the first position is 1)
+        output_row: [1, 0] (corresponding to the 'goodbye' class)
+
+    After processing all documents, the training list might look like this:
+
+    Code:
+    [
+        [[0, 0, 0, 1, 0, 0, 0, 0], [0, 1]],
+        [[1, 0, 0, 0, 0, 0, 0, 0], [1, 0]],
+        # ... more training pairs
+    ]
+
+    After shuffling and converting to NumPy arrays:
+
+        train_x: Feature vectors (bag-of-words representations), item[0]
+        train_y: One-hot encoded labels, item[1]
