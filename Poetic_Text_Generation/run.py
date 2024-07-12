@@ -10,7 +10,7 @@ name = ['base', 'base_droput', 'BiLSTM']
 def main():
     text, char_to_index, index_to_char, characters = load_data()
     """ Names of saved models: [base, base_droput, BiLSTM] -- Change index as per need """
-    model = tf.keras.models.load_model(f'Models/poetic_text_generator_{name[0]}.keras')
+    model = tf.keras.models.load_model(f'Poetic_Text_Generation/Models/poetic_text_generator_{name[0]}.keras')
 
     # Get user input for the length and temperature
     length = int(input("Enter the length of text to generate: "))
