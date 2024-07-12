@@ -92,3 +92,91 @@
 
 4. Model Training
     Model was trained for 50 epochs with a batch size of 256. Adam optimizer was used, Categorical Crossentropy as loss function
+
+5. Text Generation
+    Code:
+    def generate_text(model, text, char_to_index, index_to_char, characters, length=500, temperature=1.0):
+        """ Generates text using the trained model and user-defined parameters. """
+        start_index = np.random.randint(0, len(text) - SEQ_LENGTH - 1)
+        generated_text = text[start_index: start_index + SEQ_LENGTH]
+        
+        for _ in range(length):
+            x_pred = np.zeros((1, SEQ_LENGTH, len(characters)))
+            for t, char in enumerate(generated_text):
+                x_pred[0, t, char_to_index[char]] = 1
+            
+            preds = model.predict(x_pred, verbose=0)[0]
+            next_index = sample(preds, temperature)
+            next_char = index_to_char[next_index]
+            
+            generated_text += next_char
+            generated_text = generated_text[1:]
+        
+        return generated_text
+
+    Explanation:
+    Randomly selects a starting point 
+    Prints characters up to Sequence length from that point 
+    Then loop iterates for given length or 500 default 
+    Prepare input value sent to model for predictions 
+    np array of zeroes, One Hot Encode the previously generated text 
+    Send for prediction, get index for next character using Sample function (Keras Documentation)
+    Get next character using index (Using index to char mapping dictionary)
+    Append to generated text, return at end 
+
+    Example:
+    Assume:
+    text = "The quick brown fox jumps over the lazy dog. "
+    start_index = 5  # Example random starting index
+    SEQ_LENGTH = 20
+    generated_text = "quick brown fox ju"
+
+    Text Generation:
+    length = 100
+    temperature = 0.5
+    for _ in range(length):
+        # Inside the loop, it repeatedly predicts and appends characters
+
+    Preparing Input:
+    x_pred = np.zeros((1, 20, 29))  # Example size for one-hot encoding
+    generated_text = "quick brown fox ju"
+
+    Predicted Probabilities:
+    preds = [0.2, 0.4, 0.1, ...]  # Example predicted probabilities for next character
+
+    Generated Text: Assume temperature of 0.5
+    "quick brown fox jumps over the lazy dog. he brown fox jumps over the lazy dog. he brown fox jumps over the lazy dog. "
+
+6. Main Function 
+    Code:
+    def main():
+        text, char_to_index, index_to_char, characters = load_data()
+        x, y = prepare_data(text, char_to_index)
+        
+        model = build_model(input_shape=(x.shape[1], x.shape[2]), num_classes=len(characters))
+        model = train_model(model, x, y)
+        
+        generated_text = generate_text(model, text, char_to_index, index_to_char, characters)
+        print("Generated Text:\n", generated_text)
+
+    Explanation:
+    Gets text, mapping dictionaries from Load Data function
+    Gets x and y from Prepare data function 
+    Builds Model, Generates text using respective function 
+    Prints output
+
+7. Run Module
+    Essentially, runs the code of Main program module
+    Loads saved model (Models were trained on Google Colab so might not run locally)
+    Accepts length - text to generate, temperature - controls randomness and diversity of generated text, higher = more random
+
+    A higher temperature increases the likelihood of selecting less probable characters, making the generated text more diverse and unpredictable.
+    Conversely, a lower temperature makes the model more confident in its predictions, favoring characters with higher probabilities and generating more deterministic text.
+
+    Temperature scaling affects how probabilities are sampled from a distribution. For preds = [0.3, 0.2, 0.1, 0.4]:
+
+    Temperature 0.1: Likely outcome is [0, 0, 0, 1], favoring the highest probability (0.4).
+    Temperature 0.5: Outcome could still be [0, 0, 0, 1], with some chance for other indices.
+    Temperature 1.0: Balanced sampling across [0, 1, 2, 3], more likely towards index 3 due to higher probability.
+    Temperature 1.5: Sampling across [0, 1, 2, 3], with index 3 still favored.
+    Temperature 2.0: Uniform sampling across [0, 1, 2, 3], slightly favoring index 3.
