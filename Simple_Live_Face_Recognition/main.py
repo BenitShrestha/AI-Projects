@@ -73,8 +73,8 @@ def check_face(frame):
         # face_match = False
         # print(f"Error while verifying face: {e}")
 
-if __name__ == '__main__':
 
+def main():
     # Dictionary of reference image paths
     reference_images = {
         1: 'Simple_Live_Face_Recognition/Images/benit_phone_NG_1.jpg',
@@ -125,3 +125,7 @@ if __name__ == '__main__':
     cv2.imwrite(f'Simple_Live_Face_Recognition/Images/1_captured_frame.jpg', preprocessed_frame)  # Save captured frame
     cv2.destroyAllWindows()
     cap.release() # Release resources related to cap
+
+if __name__ == '__main__':
+    main()
+    
