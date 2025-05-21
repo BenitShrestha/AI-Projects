@@ -20,7 +20,7 @@ optimizer = torch.optim.Adam(params=model.parameters(),
                              lr=1e-3)
 
 # Train
-epochs = 5
+epochs = 20
 for epoch in range(epochs):
     total_loss = 0
 
@@ -39,6 +39,6 @@ for epoch in range(epochs):
     print(f"Epoch: {epoch + 1} / {epochs}, Loss: {total_loss:.4f}")
 
 # Save model
-os.makedirs("sketchify/Models", exist_ok=True)
-torch.save(model.state_dict(), "sketchify/Models/sketchify_cnn.pt")
+os.makedirs("sketchify/backend/Models", exist_ok=True)
+torch.save(model.state_dict(), "sketchify/backend/Models/sketchify_cnn.pt")
 print("Model saved!")
